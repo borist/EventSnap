@@ -1,5 +1,4 @@
-package com.hackny.spring;
-
+package com.hackny.spring.helpers;
 import java.net.*;
 import java.io.*;
 
@@ -12,10 +11,9 @@ public class ParselyJSONQuery {
 	URL query;
 	String json = "";
 	HttpURLConnection queryreader;
-	JSONObject j;
-	public ParselyJSONQuery(String url) throws IOException, ParseException{
+	public ParselyJSONQuery(String text) throws IOException, ParseException, InterruptedException{
 		try {
-			query = new URL(url);
+			query = new URL("http://hack.parsely.com/parse");
 			queryreader = (HttpURLConnection) query.openConnection();
 			queryreader.setRequestMethod("POST");
 		    queryreader.setUseCaches (false);
@@ -24,7 +22,7 @@ public class ParselyJSONQuery {
 
 		      //Send request
 		      DataOutputStream wr = new DataOutputStream (queryreader.getOutputStream ());
-		      wr.writeBytes ("text=Jake the dog and Finn the human are the stars of Adventure Time. wiki_filter=true");
+		      wr.writeBytes ("text=" + text +"&wiki_filter=false");
 		      wr.flush ();
 		      wr.close ();
 		      
@@ -36,7 +34,7 @@ public class ParselyJSONQuery {
 		      }
 		      rd.close();
 		      
-			j = (JSONObject)new JSONParser().parse(json);
+			JSONObject j = (JSONObject)new JSONParser().parse(json);
 			String get =(String) j.get("url");
 			//System.out.println(get);
 			String getURL = "http://hack.parsely.com" + get;
@@ -52,31 +50,22 @@ public class ParselyJSONQuery {
 	        	inputLine += in.readLine();
 	        System.out.println(inputLine);
 	       	j = (JSONObject)new JSONParser().parse(inputLine);
-	       	queryreader.setRequestMethod("GET");
-	       	in = new BufferedReader(new InputStreamReader(
-                    queryreader.getInputStream()));
+	       	
+	       
 	       	while(((String) j.get("status")).equals("WORKING")){
 	       		query = new URL(getURL);
 				queryreader = (HttpURLConnection) query.openConnection();
 				queryreader.setRequestMethod("GET");
-
-		        in = new BufferedReader(new InputStreamReader(
-		                                    queryreader.getInputStream()));
-		        inputLine = "";
-		        while(in.ready())
-		        	inputLine += in.readLine();
-		        System.out.println(inputLine);
-		       	j = (JSONObject)new JSONParser().parse(inputLine);
-		       	queryreader.setRequestMethod("GET");
-	       		while(in.ready())
-		        	inputLine += in.readLine();
-		        System.out.println(inputLine);
-		       	j = (JSONObject)new JSONParser().parse(inputLine);
-		       	queryreader.setRequestMethod("GET");
-		       	in = new BufferedReader(new InputStreamReader(
+				inputLine = "";
+				in = new BufferedReader(new InputStreamReader(
                         queryreader.getInputStream()));
+				while(in.ready())
+		        	inputLine += in.readLine();
+		        System.out.println(inputLine);
+		       	j = (JSONObject)new JSONParser().parse(inputLine);
+		       	
+				Thread.sleep(1000);
 	       	}
-
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -88,12 +77,8 @@ public class ParselyJSONQuery {
 		return json;
 	}
 	
-	public String getDescription(){
-		return (String) j.get("data");
-	}
-	
-	public static void main(String args[]) throws IOException, ParseException{
-		ParselyJSONQuery q = new ParselyJSONQuery("http://hack.parsely.com/parse");
+	public static void main(String args[]) throws IOException, ParseException, InterruptedException{
+		ParselyJSONQuery q = new ParselyJSONQuery("I met a traveler from an antique land Who said: Two vast and trunkless legs of stone Stand in the desert. Near them, on the sand, Half sunk, a shattered visage lies, whose frown, And wrinkled lip, and sneer of cold command, Tell that its sculptor well those passions read Which yet survive, stamped on these lifeless things, The hand that mocked them, and the heart that fed; And on the pedestal these words appear: My name is Ozymandias, king of kings: Look on my works, ye Mighty, and despair!Nothing beside remains. Round the decay Of that colossal wreck, boundless and bare The lone and level sands stretch far away.");
 
 	}
 }
