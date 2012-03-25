@@ -25,7 +25,9 @@ import android.widget.TextView;
 import com.abbyy.ocrsdk.Client;
 import com.abbyy.ocrsdk.ProcessingSettings;
 import com.abbyy.ocrsdk.Task;
+import com.hackny.spring.helpers.GoogleSuggest;
 import com.hackny.spring.helpers.Preview;
+import com.hackny.spring.helpers.TextProcessor;
 
 public class SnapPictureActivity extends Activity {
     private static final String TAG = "SnapPictureActivity";
@@ -46,7 +48,6 @@ public class SnapPictureActivity extends Activity {
         
         preview = new Preview(this);
         layout = ((FrameLayout) findViewById(R.id.preview_layout));
-        Log.e(TAG, layout.toString());
         layout.addView(preview);
         
         photoButton = (Button) findViewById(R.id.buttonClick);
@@ -119,8 +120,8 @@ public class SnapPictureActivity extends Activity {
 				Thread.sleep(1000);
 				displayMessage( "Starting.." );
 				Client restClient = new Client();
-				restClient.ApplicationId = "PictureSnapper";
-				restClient.Password = "iB+rPjMuaM+yl0pJkLIQVnMa";
+				restClient.ApplicationId = "PhotoGrabber";
+				restClient.Password = "VLybwFqO/FDQCILgEPabzx7D";
 				
 				//File file = new File (Environment.getExternalStorageDirectory(), "result.txt");
 				FileWriter fw = new FileWriter(Environment.getExternalStorageDirectory()+"/result.txt");
@@ -149,19 +150,25 @@ public class SnapPictureActivity extends Activity {
 				
 				displayMessage( "Ready" );
 
+				TextProcessor tp = new TextProcessor(outputFile);
 				
-				StringBuffer contents = new StringBuffer(); 
+				//Log.e("TEXTING BRO:", tp.title + "!!!!! " + tp.stime + " - " + tp.etime + " on " + tp.month + "/" + tp.day + "/" + tp.year);
+				
+				/*StringBuffer contents = new StringBuffer(); 
 				BufferedReader reader = new BufferedReader(new FileReader(outputFile)); 
 				String text = null; 
 				while ((text = reader.readLine()) != null) { 
-					Log.e("READER", "i read?, " + text);
-					contents.append(text) 
-					.append(System.getProperty( 
-							"line.separator")); 
-				}
+					Log.e("READER", "i read? " + text);
+					contents.append(text) ;
+				}*/
 				
-				displayMessage( contents.toString() );
-				String result = new GoogleSuggest(contents.toString()).fuqs();
+				//String result = 
+					//new GoogleSuggest(contents.toString()).fuqs();
+				//Log.e("FUQS results", result);
+				String result = "Event Title: " + tp.title + ", time:" + tp.stime + " - " + tp.etime + 
+					", Date: " + tp.month + "/" + tp.day + "/" + tp.year;
+				
+				displayMessage( result.toString() );
 				
 			} catch ( Exception e ) {
 				final Writer result = new StringWriter();

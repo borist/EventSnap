@@ -1,22 +1,9 @@
 package com.abbyy.ocrsdk;
 
-import java.io.PrintWriter;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xml.sax.XMLReader;
-
-import android.util.Log;
+import java.io.*;
+import org.w3c.dom.*;
+import javax.xml.parsers.*;
+import org.xml.sax.*;
 
 public class Task {
 	public enum TaskStatus {
@@ -30,21 +17,8 @@ public class Task {
 		// Read full task information from xml
 		InputSource source = new InputSource();
 		source.setCharacterStream(reader);
-		
 		DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-		Document doc = null;
-		
-		try {
-			doc = builder.parse(source);
-		}
-		
-		catch (Exception e) {
-			final Writer result = new StringWriter();
-	        final PrintWriter printWriter = new PrintWriter(result);
-	        e.printStackTrace(printWriter);
-			Log.e("TASK DIED", result.toString());
-			Log.e("TASK DIED..", e.getClass() + ", " + e.getMessage());
-		}		
+		Document doc = builder.parse(source);
 		
 		NodeList taskNodes = doc.getElementsByTagName("task");
 		Element task = (Element)taskNodes.item(0);
@@ -70,7 +44,6 @@ public class Task {
 	{
 		Id = taskElement.getAttribute("id");
 		Status = parseTaskStatus( taskElement.getAttribute( "status" ) );
-		Log.e("STATUS UPDATE", "id: " + taskElement.getAttribute("id") + ", status: " + taskElement.getAttribute("status")); 
 		if( Status == TaskStatus.Completed )
 			DownloadUrl = taskElement.getAttribute("resultUrl");
 	}
