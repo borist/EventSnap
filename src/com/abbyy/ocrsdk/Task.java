@@ -1,9 +1,22 @@
 package com.abbyy.ocrsdk;
 
-import java.io.*;
-import org.w3c.dom.*;
-import javax.xml.parsers.*;
-import org.xml.sax.*;
+import java.io.PrintWriter;
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.XMLReader;
+
+import android.util.Log;
 
 public class Task {
 	public enum TaskStatus {
@@ -17,8 +30,23 @@ public class Task {
 		// Read full task information from xml
 		InputSource source = new InputSource();
 		source.setCharacterStream(reader);
+		
+		Log.e("WTF IN TASK IS THIS", source.toString());
+		
 		DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-		Document doc = builder.parse(source);
+		Document doc = null;
+		
+		try {
+			doc = builder.parse(source);
+		}
+		
+		catch (Exception e) {
+			final Writer result = new StringWriter();
+	        final PrintWriter printWriter = new PrintWriter(result);
+	        e.printStackTrace(printWriter);
+			Log.e("TASK DIED", result.toString());
+			Log.e("TASK DIED..", e.getClass() + ", " + e.getMessage());
+		}		
 		
 		NodeList taskNodes = doc.getElementsByTagName("task");
 		Element task = (Element)taskNodes.item(0);

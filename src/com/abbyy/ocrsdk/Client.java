@@ -1,7 +1,21 @@
 package com.abbyy.ocrsdk;
 
-import java.io.*;
-import java.net.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+
+import android.util.Log;
 
 public class Client {
 	public String ApplicationId;
@@ -9,17 +23,28 @@ public class Client {
 	
 	public String ServerUrl = "http://cloud.ocrsdk.com";
 	
-	public Task ProcessImage( String filePath, ProcessingSettings settings) throws Exception
+	public Task ProcessImage( byte[] in, ProcessingSettings settings) throws Exception 
 	{
-		URL url = new URL(ServerUrl + "/processImage?" + settings.AsUrlParams());
-		byte[] fileContents = readDataFromFile( filePath );
+		BufferedReader reader = null;
+		try {
+			URL url = new URL(ServerUrl + "/processImage?" + settings.AsUrlParams());
+		byte[] fileContents = in;//readDataFromFile( filePath );
 		
 		HttpURLConnection connection = openPostConnection(url);
-		
+		Log.e("wtffff", "it made it after openPost");
 		connection.setRequestProperty("Content-Length", Integer.toString(fileContents.length));
-		connection.getOutputStream().write( fileContents );
+		connection.getOutputStream().write(fileContents);
+		Log.e("WTF", "it made it after getOutputStream");
 		
-		BufferedReader reader = new BufferedReader( new InputStreamReader( connection.getInputStream()));
+		reader = new BufferedReader( new InputStreamReader(connection.getInputStream()));
+		}
+		catch (Exception e) {
+			final Writer result = new StringWriter();
+	        final PrintWriter printWriter = new PrintWriter(result);
+	        e.printStackTrace(printWriter);
+			Log.e("MOTHER FUCKER", result.toString());
+			//displayMessage( "Error: " + e.getClass() + ", " + e.getStackTrace().toString() + ", " + e.getMessage() );
+		}
 		return new Task(reader);
 	}
 	
