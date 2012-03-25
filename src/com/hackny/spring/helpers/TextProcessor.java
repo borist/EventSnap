@@ -1,4 +1,4 @@
-package com.hackny.spring.helpers;
+//package com.hackny.spring.helpers;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -6,7 +6,7 @@ import java.util.Calendar;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import android.util.Log;
+//import android.util.Log;
 
 public class TextProcessor {
 
@@ -30,34 +30,17 @@ public class TextProcessor {
 			c = c.trim().toLowerCase();
 			msg = msg + " " + c;
 		}
-		msg = msg.toLowerCase();
-		System.out.println(msg);
-		
-		
+		msg = msg.toLowerCase();		
 
 		String[] date = dates(msg).split("\\-|\\/|\\.");
-		if (date.length != 3) throw new Exception();
+		if (date.length != 3) 
+			date = null;
 		else {
 			month = date[0];
 			day = date[1];
 			year = date[2];
 		}
 		
-		int d1 = 0, d2 = 0, d3 = 0, count = 0;
-		
-		for (int i = 0; i < msg.length(); i++){
-			char c = msg.charAt(i);
-			if (c == month.charAt(0)) d1 = count;
-			if (c == day.charAt(0)) d2 = count;
-			if (c == year.charAt(0)) d3 = count;
-			count++;
-		}
-		
-		int m = Math.min(d1, d2);
-		int d = Math.min(m, d3);
-
-		title = msg.substring(0, d);
-
 		String[] tiempo = time(msg);
 		stime = tiempo[0];
 		if (tiempo.length > 1)
@@ -80,6 +63,7 @@ public class TextProcessor {
 	}
 
 	public String dates(String msg){
+		int d1 = 0, d2 = 0, d3 = 0;
 		String formatted = "(0[1-9]|1[012]|[1-9])(-|\\/|\\.)(0[1-9]|[1-9]|[12][0-9]|3[01])(-|\\/|\\.)(((19|20)\\d{2})|(\\d{2}))";
 		Pattern timeRegex = Pattern.compile(formatted);
 		Matcher timeMatch = timeRegex.matcher(msg);
@@ -106,8 +90,18 @@ public class TextProcessor {
 			Matcher dayMatch = dayReg.matcher(msg);
 			Matcher monthMatch = monthReg.matcher(msg);
 			Matcher yearMatch = yearReg.matcher(msg);
+			
+			
 			while(monthMatch.find()){
 				String match = "";
+				int count = 0;
+				for (int j = 0; j < msg.length(); j++){
+					char c = msg.charAt(j);
+					if (c == monthMatch.group().charAt(0)) d1 = count; 
+					count++;
+					if (d1 != 0) break;
+				}
+				
 				if (monthMatch.group().equals("january") || monthMatch.group().equals("jan")) match = "1";
 				if (monthMatch.group().equals("february") || monthMatch.group().equals("feb")) match = "2";
 				if (monthMatch.group().equals("march") || monthMatch.group().equals("mar")) match = "3";
@@ -124,6 +118,14 @@ public class TextProcessor {
 				date = date + "/";
 			}
 			while (dayMatch.find()){
+				int count = 0;
+				for (int j = 0; j < msg.length(); j++){
+					char c = msg.charAt(j);
+					if (c == dayMatch.group().charAt(0)) d2 = count;
+					count++;
+					if (d2 != 0) break;
+				}
+				
 				if (dayMatch.group().length() > 4)
 					date = date + dayMatch.group().substring(dayMatch.group().length() - 2, dayMatch.group().length());
 				else 
@@ -131,6 +133,14 @@ public class TextProcessor {
 				date = date + "/";
 			}
 			while (yearMatch.find()){
+				int count = 0;
+				for (int j = 0; j < msg.length(); j++){
+					char c = msg.charAt(j);
+					if (c == yearMatch.group().charAt(0)) d3 = count;
+					count++;
+					if (d3 != 0) break;
+				}
+				
 				String yurr = yearMatch.group();
 				if (yurr.length() > 2)
 					yurr = yurr.substring(2);
@@ -138,7 +148,26 @@ public class TextProcessor {
 			}
 			if (date.charAt(date.length() - 1) == '/')
 				date = date + (Calendar.getInstance().get(Calendar.YEAR) - 2000);
+		
+			if (d3 == 0) d3 = 10000;
+			
+			int d = Math.min(d1, Math.min(d2, d3));
 
+			String titleReg = "[a-zA-Z0-9 ]+";
+			Pattern titleRegex = Pattern.compile(titleReg);
+			Matcher titleMatch = titleRegex.matcher(msg.substring(0, d));
+			while (titleMatch.find())
+				this.title = titleMatch.group();
+			
+			//uppercase first char of each word in title
+			StringBuilder b = new StringBuilder(this.title);
+			int k = 0;
+			do {
+			  b.replace(k, k + 1, b.substring(k, k + 1).toUpperCase());
+			  k =  b.indexOf(" ", k) + 1;
+			} while (k > 0 && k < b.length());
+			this.title = b.toString();
+			
 			//output will be of format 3/24/12
 			return date;
 		}
