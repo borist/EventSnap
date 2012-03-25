@@ -167,6 +167,7 @@ public class SnapPictureActivity extends Activity {
 				}
 				
 				displayMessage( contents.toString() );
+				String result = new GoogleSuggest(contents.toString()).fuqs();
 				
 			} catch ( Exception e ) {
 				final Writer result = new StringWriter();
