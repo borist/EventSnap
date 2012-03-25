@@ -22,7 +22,9 @@ public class EventSnapActivity extends Activity {
     		Intent intent = new Intent(getApplicationContext(), SnapPictureActivity.class);
     		startActivity(intent);
     		break;
+    	case R.id.calendar_button:
+    		startActivity(new Intent(getApplicationContext(), CalendarActivity.class));
+    		break;
     	}
-    	
     }
 }
