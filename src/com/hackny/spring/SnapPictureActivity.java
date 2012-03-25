@@ -71,6 +71,7 @@ public class SnapPictureActivity extends Activity {
     		public void onPictureTaken(byte[] data, Camera camera) {
     			imageBytes = data;
     			
+    			
 //				Log.e("SnapPictureActivity BEFORE", imageBytes.toString());
 //				
 //    			//code to set taken picture to be Bitmap
