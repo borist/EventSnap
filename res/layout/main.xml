@@ -28,6 +28,13 @@
 		android:background="@drawable/camera"
 		android:onClick="onClick"
 		/>
-
-
+	
+	<Button
+		android:id="@+id/calendar_button"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_toRightOf="@id/camera_button"
+		android:layout_centerVertical="true"
+		android:layout_alignParentRight="true"
+		android:onClick="onClick"/>
 </RelativeLayout>

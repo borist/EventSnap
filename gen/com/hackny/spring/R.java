@@ -41,9 +41,10 @@ containing a value of this type.
         public static final int actionbar_btn_normal=0x7f020003;
         public static final int actionbar_btn_pressed=0x7f020004;
         public static final int background=0x7f020005;
-        public static final int camera=0x7f020006;
-        public static final int header=0x7f020007;
-        public static final int icon=0x7f020008;
+        public static final int calendar=0x7f020006;
+        public static final int camera=0x7f020007;
+        public static final int header=0x7f020008;
+        public static final int icon=0x7f020009;
     }
     public static final class id {
         public static final int actionbar_actions=0x7f090006;
@@ -55,18 +56,22 @@ containing a value of this type.
         public static final int actionbar_item=0x7f090009;
         public static final int actionbar_progress=0x7f090007;
         public static final int actionbar_title=0x7f090008;
-        public static final int buttonClick=0x7f09000d;
-        public static final int camera_button=0x7f09000b;
-        public static final int header=0x7f09000a;
-        public static final int layout=0x7f09000c;
-        public static final int preview_layout=0x7f09000e;
+        public static final int buttonClick=0x7f090010;
+        public static final int button_get_events=0x7f09000a;
+        public static final int calendar_button=0x7f09000e;
+        public static final int camera_button=0x7f09000d;
+        public static final int header=0x7f09000c;
+        public static final int layout=0x7f09000f;
+        public static final int preview_layout=0x7f090011;
         public static final int screen=0x7f090000;
+        public static final int text_event=0x7f09000b;
     }
     public static final class layout {
         public static final int actionbar=0x7f030000;
         public static final int actionbar_item=0x7f030001;
-        public static final int main=0x7f030002;
-        public static final int take_picture=0x7f030003;
+        public static final int calendar=0x7f030002;
+        public static final int main=0x7f030003;
+        public static final int take_picture=0x7f030004;
     }
     public static final class string {
         public static final int app_name=0x7f070000;

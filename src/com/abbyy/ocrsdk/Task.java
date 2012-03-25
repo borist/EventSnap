@@ -31,8 +31,6 @@ public class Task {
 		InputSource source = new InputSource();
 		source.setCharacterStream(reader);
 		
-		Log.e("WTF IN TASK IS THIS", source.toString());
-		
 		DocumentBuilder builder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 		Document doc = null;
 		
@@ -72,6 +70,7 @@ public class Task {
 	{
 		Id = taskElement.getAttribute("id");
 		Status = parseTaskStatus( taskElement.getAttribute( "status" ) );
+		Log.e("STATUS UPDATE", "id: " + taskElement.getAttribute("id") + ", status: " + taskElement.getAttribute("status")); 
 		if( Status == TaskStatus.Completed )
 			DownloadUrl = taskElement.getAttribute("resultUrl");
 	}
