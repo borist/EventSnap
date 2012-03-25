@@ -1,13 +1,13 @@
 package com.hackny.spring;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.Calendar;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.ShutterCallback;
@@ -25,7 +25,6 @@ import android.widget.TextView;
 import com.abbyy.ocrsdk.Client;
 import com.abbyy.ocrsdk.ProcessingSettings;
 import com.abbyy.ocrsdk.Task;
-import com.hackny.spring.helpers.GoogleSuggest;
 import com.hackny.spring.helpers.Preview;
 import com.hackny.spring.helpers.TextProcessor;
 
@@ -167,6 +166,15 @@ public class SnapPictureActivity extends Activity {
 				//Log.e("FUQS results", result);
 				String result = "Event Title: " + tp.title + ", time:" + tp.stime + " - " + tp.etime + 
 					", Date: " + tp.month + "/" + tp.day + "/" + tp.year;
+				
+				Calendar cal = Calendar.getInstance();
+				Intent calIntent = new Intent(Intent.ACTION_INSERT);
+				calIntent.setType("vnd.android.cursor.item/event");
+				calIntent.putExtra("title", "My House Party");
+				calIntent.putExtra("location", "My Beach House");
+				calIntent.putExtra("description", "A Pig Roast on the Beach");
+				startActivity(calIntent);
+				
 				
 				displayMessage( result.toString() );
 				
