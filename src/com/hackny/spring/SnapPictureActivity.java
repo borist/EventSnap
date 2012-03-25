@@ -1,9 +1,8 @@
 package com.hackny.spring;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -120,18 +119,12 @@ public class SnapPictureActivity extends Activity {
 				Thread.sleep(1000);
 				displayMessage( "Starting.." );
 				Client restClient = new Client();
-				restClient.ApplicationId = "EventSnap";
-				restClient.Password = "eDKaa5wH8j01g81VIsthssEO";
+				restClient.ApplicationId = "PictureSnapper";
+				restClient.Password = "iB+rPjMuaM+yl0pJkLIQVnMa";
 				
-				for (String str : Environment.getExternalStorageDirectory().list())
-					Log.e("FUCK", str.toString());
-				
-				//String filePath = Environment.getExternalStorageDirectory() + "/1332630890250.jpg";
-				
-				File file = new File (Environment.getExternalStorageDirectory(), "result.txt");
-				
-				//FileOutputStream fos = new FileOutputStream(file);
-				//fos
+				//File file = new File (Environment.getExternalStorageDirectory(), "result.txt");
+				FileWriter fw = new FileWriter(Environment.getExternalStorageDirectory()+"/result.txt");
+				fw.close();
 				String outputFile = Environment.getExternalStorageDirectory() + "/result.txt";
 				
 				ProcessingSettings settings = new ProcessingSettings();
@@ -161,12 +154,14 @@ public class SnapPictureActivity extends Activity {
 				BufferedReader reader = new BufferedReader(new FileReader(outputFile)); 
 				String text = null; 
 				while ((text = reader.readLine()) != null) { 
+					Log.e("READER", "i read?, " + text);
 					contents.append(text) 
 					.append(System.getProperty( 
 							"line.separator")); 
 				}
 				
 				displayMessage( contents.toString() );
+				String result = new GoogleSuggest(contents.toString()).fuqs();
 				
 			} catch ( Exception e ) {
 				final Writer result = new StringWriter();
