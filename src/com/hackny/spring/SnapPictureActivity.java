@@ -4,6 +4,7 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
 import android.app.Activity;
@@ -132,7 +133,7 @@ public class SnapPictureActivity extends Activity {
 				
 				String result = "Event Title: " + tp.title + ", time:" + tp.stime + " - " + tp.etime + 
 					", Date: " + tp.month + "/" + tp.day + "/" + tp.year;
-				
+				tp.description = "visit www.talklikeapirate.com for details. Yarr.";
 				displayMessage( result.toString() );
 				boolean allDay = false;
 				
@@ -141,11 +142,14 @@ public class SnapPictureActivity extends Activity {
 				if (tp.stime == null && tp.etime == null)
 					allDay = true;
 				
+				String summary = " Parsely Tags: ";
+				
 				Intent calIntent = new Intent(Intent.ACTION_EDIT);
 				calIntent.setType("vnd.android.cursor.item/event");
 				calIntent.putExtra("title", tp.title);
 				calIntent.putExtra("beginTime", gc.getTime().getTime());
-				calIntent.putExtra("description", "visit www.talklikeapirate.com for details. Yarr." + new ParselyJSONQuery(result).getData());
+				calIntent.putExtra("description", tp.description + summary + "Talk like");// + summary + parsely.substring(parsely.indexOf(">"), parsely.indexOf("<")));
+
 				if (allDay) {  
 					calIntent.putExtra("allDay", true);
 				   
@@ -156,7 +160,7 @@ public class SnapPictureActivity extends Activity {
 					calIntent.putExtra("endTime", tp.etime);
 				}
 				startActivity(calIntent);
-				
+				String parsely = new ParselyJSONQuery(tp.title + ", " + tp.description).getData();
 			} catch ( Exception e ) {
 				final Writer result = new StringWriter();
 		        final PrintWriter printWriter = new PrintWriter(result);
@@ -167,7 +171,6 @@ public class SnapPictureActivity extends Activity {
 		}
 
 		private void displayMessage( String text ) {
-			//Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
 			tv.post( new MessagePoster( text ) );
 		}     
 
