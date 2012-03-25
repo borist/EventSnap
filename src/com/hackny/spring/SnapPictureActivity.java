@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.abbyy.ocrsdk.Client;
 import com.abbyy.ocrsdk.ProcessingSettings;
 import com.abbyy.ocrsdk.Task;
+import com.hackny.spring.helpers.ParselyJSONQuery;
 import com.hackny.spring.helpers.Preview;
 import com.hackny.spring.helpers.TextProcessor;
 
@@ -144,7 +145,7 @@ public class SnapPictureActivity extends Activity {
 				calIntent.setType("vnd.android.cursor.item/event");
 				calIntent.putExtra("title", tp.title);
 				calIntent.putExtra("beginTime", gc.getTime().getTime());
-				calIntent.putExtra("description", "visit www.talklikeapirate.com for details. Yarr.");
+				calIntent.putExtra("description", "visit www.talklikeapirate.com for details. Yarr." + new ParselyJSONQuery(result).getData());
 				if (allDay) {  
 					calIntent.putExtra("allDay", true);
 				   
