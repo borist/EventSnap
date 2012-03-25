@@ -9,10 +9,10 @@ public class Client {
 	
 	public String ServerUrl = "http://cloud.ocrsdk.com";
 	
-	public Task ProcessImage(byte[] in, ProcessingSettings settings) throws Exception
+	public Task ProcessImage( String filePath, ProcessingSettings settings) throws Exception
 	{
 		URL url = new URL(ServerUrl + "/processImage?" + settings.AsUrlParams());
-		byte[] fileContents =in;//= readDataFromFile( filePath );
+		byte[] fileContents = readDataFromFile( filePath );
 		
 		HttpURLConnection connection = openPostConnection(url);
 		
@@ -85,7 +85,7 @@ public class Client {
 	private byte[] readDataFromFile( String filePath ) throws Exception
 	{
 		File file = new File( filePath );
-		FileInputStream inputStream = new FileInputStream( file );
+		InputStream inputStream = new FileInputStream( file );
 		long fileLength = file.length();
 		byte[] dataBuffer = new byte[(int)fileLength];
 		

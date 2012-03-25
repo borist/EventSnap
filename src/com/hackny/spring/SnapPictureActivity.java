@@ -1,13 +1,19 @@
 package com.hackny.spring;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
+import java.io.IOException;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.ShutterCallback;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -75,11 +81,11 @@ public class SnapPictureActivity extends Activity {
 //				Log.e("SnapPictureActivity BEFORE", imageBytes.toString());
 //				
 //    			//code to set taken picture to be Bitmap
-    			//ByteArrayInputStream bytes = new ByteArrayInputStream(data);
-    			//BitmapDrawable bmd = new BitmapDrawable(bytes);
-    			//Bitmap bm = bmd.getBitmap();
-
-//    			String fileName = "EventSnap.jpg";
+//    			ByteArrayInputStream bytes = new ByteArrayInputStream(data);
+//    			BitmapDrawable bmd = new BitmapDrawable(bytes);
+//    			Bitmap bm = bmd.getBitmap();
+//
+//    			String fileName = "00000001.jpg";
 //    			FileOutputStream out = null;
 //    			try {
 //    				out = new FileOutputStream(Environment.getExternalStorageDirectory()+"/"+fileName);
@@ -89,7 +95,7 @@ public class SnapPictureActivity extends Activity {
 //    				Log.e("SNAPs", e.getMessage());
 //    			}
 //    			Log.e("SnapPictureActivity FOS:", Environment.getExternalStorageDirectory().toString());       
-// 
+ 
 //				Intent intent = new Intent(getApplicationContext(), ImageProcessActivity.class);
 //				startActivity(intent);
 //    			Log.d(TAG, "onPictureTaken - jpeg");
@@ -105,6 +111,8 @@ public class SnapPictureActivity extends Activity {
 		setContentView(tv);
 
 		new Thread( new Worker() ).start();
+		
+
     }
     
     class Worker implements Runnable {
@@ -118,13 +126,17 @@ public class SnapPictureActivity extends Activity {
 				restClient.ApplicationId = "EventSnap";
 				restClient.Password = "eDKaa5wH8j01g81VIsthssEO";
 				
+				for (String str : Environment.getExternalStorageDirectory().list())
+					Log.e("FUCK", str.toString());
+				
+				String filePath = Environment.getExternalStorageDirectory() + "/1332630890250.jpg";
 				String outputFile = "/sdcard/result.txt";
 				
 				ProcessingSettings settings = new ProcessingSettings();
 				settings.setOutputFormat( ProcessingSettings.OutputFormat.txt );
 				
 				displayMessage( "Uploading.." );
-				Task task = restClient.ProcessImage(imageBytes, settings);
+				Task task = restClient.ProcessImage(filePath, settings);
 				
 				while( task.IsTaskActive() ) {
 					Thread.sleep(2000);
@@ -178,5 +190,6 @@ public class SnapPictureActivity extends Activity {
 			private final String _message;
 		}
 	}
+
 
 }

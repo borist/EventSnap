@@ -37,18 +37,18 @@ public class Preview extends SurfaceView implements SurfaceHolder.Callback {
 
 				public void onPreviewFrame(byte[] data, Camera arg1) {
 					FileOutputStream outStream = null;
-//					try {
-//						outStream = new FileOutputStream(String.format(
-//								"/sdcard/%d.jpg", System.currentTimeMillis()));
-//						outStream.write(data);
-//						outStream.close();
-//						Log.d(TAG, "onPreviewFrame - wrote bytes: " + data.length);
-//					} catch (FileNotFoundException e) {
-//						e.printStackTrace();
-//					} catch (IOException e) {
-//						e.printStackTrace();
-//					} finally {
-//					}
+					try {
+						outStream = new FileOutputStream(String.format(
+								"/sdcard/%d.jpg", System.currentTimeMillis()));
+						outStream.write(data);
+						outStream.close();
+						Log.d(TAG, "onPreviewFrame - wrote bytes: " + data.length);
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					} finally {
+					}
 					Preview.this.invalidate();
 				}
 			});
