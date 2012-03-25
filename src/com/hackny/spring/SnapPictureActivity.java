@@ -1,10 +1,11 @@
 package com.hackny.spring;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.ByteArrayInputStream;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.ShutterCallback;
@@ -16,6 +17,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import com.hackny.spring.helpers.Preview;
 
@@ -49,44 +51,33 @@ public class SnapPictureActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				preview.camera.takePicture(shutterCallback, rawCallback, jpegCallback);
+				Intent intent = new Intent(getApplicationContext(), demoActivity.class); 
+	    		startActivity(intent);
 			}
 		});
        
         shutterCallback = new ShutterCallback(){
         	public void onShutter() {
-        		//yo face
         	}
         };
         
         rawCallback = new PictureCallback() {
         	public void onPictureTaken(byte[] data, Camera camera) {
-        		//
         	}
         };
         
         jpegCallback = new PictureCallback() {
     		public void onPictureTaken(byte[] data, Camera camera) {
-    			FileOutputStream outStream = null;
-    			try {
-    				// write to local sandbox file system
-    				// outStream =
-    				// CameraDemo.this.openFileOutput(String.format("%d.jpg",
-    				// System.currentTimeMillis()), 0);
-    				// Or write to sdcard
-    				outStream = new FileOutputStream(String.format(
-    						"/sdcard/%d.jpg", System.currentTimeMillis()));
-    				outStream.write(data);
-    				outStream.close();
-    				Log.d(TAG, "onPictureTaken - wrote bytes: " + data.length);
-    			} catch (FileNotFoundException e) {
-    				e.printStackTrace();
-    			} catch (IOException e) {
-    				e.printStackTrace();
-    			} finally {
-    			}
+    			ByteArrayInputStream bytes = new ByteArrayInputStream(data);
+    			BitmapDrawable bmd = new BitmapDrawable(bytes);
+    			Bitmap bm = bmd.getBitmap();
+    			ImageView im = new ImageView(getApplicationContext());
+    			im.setImageBitmap(bm);
+    			setContentView(im);
+    			
     			Log.d(TAG, "onPictureTaken - jpeg");
     		}
     	};
     }
-    
+     
 }
