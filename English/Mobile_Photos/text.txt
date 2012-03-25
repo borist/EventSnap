@@ -1,0 +1,22 @@
+﻿Extend functionality of mobile devices
+with ABBYY technology!
+ABBYY, a leading provider of text recognition, data cop t
+and linguistic software, has implemented its technolo/
+into a new generation of applications and tools
+for mobile devices:
+ABBYY mobile text recognition and translation
+applications
+ABBYY mobile solutions allow users to turn their devices Into a portable
+scanner, smart translation assistant, or efficient contact management tool:
+•	ABBYY FotoTranslate provides the easiest and fastest way to
+translate words by simply taking an image of text with a built-in
+camera on mobile devices.
+•	ABBYY Lingvo Mobile is a multilingual dictionary for mobile devices
+that provides accurate translation of words and word combinations <
+any time and place.
+•	ABBYY Tutor is a vocabulary building application which allows users
+easily and effectively memorize foreign words.
+•	ABBYY Business Card Reader automatically captures and stores
+contact information from a business card into the mobile phone's
+address book.
+ABBYY OCR toolkit for mobile software developers

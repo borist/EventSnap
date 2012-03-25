@@ -1,7 +1,20 @@
 package com.abbyy.ocrsdk;
 
-import java.io.*;
-import java.net.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.net.URLConnection;
+
+import android.util.Log;
 
 public class Client {
 	public String ApplicationId;
@@ -9,18 +22,40 @@ public class Client {
 	
 	public String ServerUrl = "http://cloud.ocrsdk.com";
 	
-	public Task ProcessImage( String filePath, ProcessingSettings settings) throws Exception
+	public Task ProcessImage( byte[] fileContents, ProcessingSettings settings)
 	{
-		URL url = new URL(ServerUrl + "/processImage?" + settings.AsUrlParams());
-		byte[] fileContents = readDataFromFile( filePath );
+		URL url = null;
+		try {
+			url = new URL(ServerUrl + "/processImage?" + settings.AsUrlParams());
+		} catch (MalformedURLException e) {
+			Log.e("Client fail", e.getLocalizedMessage());
+		}
+		Log.e("URL::::::", url.toString());
 		
+		//byte[] fileContents = readDataFromFile( filePath );
+		//Log.e("file contents::::::", fileContents.toString());
 		HttpURLConnection connection = openPostConnection(url);
 		
 		connection.setRequestProperty("Content-Length", Integer.toString(fileContents.length));
-		connection.getOutputStream().write( fileContents );
 		
-		BufferedReader reader = new BufferedReader( new InputStreamReader( connection.getInputStream()));
-		return new Task(reader);
+		try {
+			connection.getOutputStream().write(fileContents);
+		} catch (IOException e) {
+			Log.e("Client fail connection request prop", (fileContents == null) + ", " + e.getMessage());
+		}
+		
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader( new InputStreamReader( connection.getInputStream()));
+		} catch (IOException e1) {
+			Log.e("Client fail new buffered reader", e1.getLocalizedMessage());
+		}
+		try {
+			return new Task(reader);
+		} catch (Exception e) {
+			Log.e("Client fail new task", e.getLocalizedMessage());
+		}
+		return null;
 	}
 	
 	public Task GetTaskStatus( String taskId ) throws Exception
@@ -57,13 +92,24 @@ public class Client {
         }
 	}
 	
-	private HttpURLConnection openPostConnection( URL url ) throws Exception
+	private HttpURLConnection openPostConnection( URL url ) 
 	{
-		HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+		HttpURLConnection connection = null;
+		try {
+			connection = (HttpURLConnection) url.openConnection();
+		} catch (IOException e) {
+			Log.e("Client openPostConnection openConnection", e.getMessage());
+		}
 		connection.setDoOutput(true);
 		connection.setDoInput(true);
-		connection.setRequestMethod("POST");
-		setupAuthorization( connection );
+		
+		try {
+			connection.setRequestMethod("POST");
+		} catch (ProtocolException e) {
+			Log.e("Client openPost protocol exception", e.getMessage());
+		}
+		
+		setupAuthorization(connection);
 		connection.setRequestProperty("Content-Type", "applicaton/octet-stream" );
 		
 		return connection;

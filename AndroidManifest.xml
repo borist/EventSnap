@@ -23,7 +23,7 @@
         <activity android:name=".SnapPictureActivity" android:label="@string/app_name"
 			android:theme="@android:style/Theme.Black.NoTitleBar" android:screenOrientation="landscape"></activity>
         
-        <activity android:name=".demoActivity" android:label="@string/app_name"
+        <activity android:name=".ImageProcessActivity" android:label="@string/app_name"
 			android:theme="@android:style/Theme.Black.NoTitleBar" android:screenOrientation="landscape"></activity>
 
     </application>

@@ -23,17 +23,12 @@ public class Preview extends SurfaceView implements SurfaceHolder.Callback {
 
 	public Preview(Context context) {
 		super(context);
-
-		// Install a SurfaceHolder.Callback so we get notified when the
-		// underlying surface is created and destroyed.
 		mHolder = getHolder();
 		mHolder.addCallback(this);
 		mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 	}
 
 	public void surfaceCreated(SurfaceHolder holder) {
-		// The Surface has been created, acquire the camera and tell it where
-		// to draw.
 		camera = Camera.open();
 		try {
 			camera.setPreviewDisplay(holder);
@@ -42,18 +37,18 @@ public class Preview extends SurfaceView implements SurfaceHolder.Callback {
 
 				public void onPreviewFrame(byte[] data, Camera arg1) {
 					FileOutputStream outStream = null;
-					try {
-						outStream = new FileOutputStream(String.format(
-								"/sdcard/%d.jpg", System.currentTimeMillis()));
-						outStream.write(data);
-						outStream.close();
-						Log.d(TAG, "onPreviewFrame - wrote bytes: " + data.length);
-					} catch (FileNotFoundException e) {
-						e.printStackTrace();
-					} catch (IOException e) {
-						e.printStackTrace();
-					} finally {
-					}
+//					try {
+//						outStream = new FileOutputStream(String.format(
+//								"/sdcard/%d.jpg", System.currentTimeMillis()));
+//						outStream.write(data);
+//						outStream.close();
+//						Log.d(TAG, "onPreviewFrame - wrote bytes: " + data.length);
+//					} catch (FileNotFoundException e) {
+//						e.printStackTrace();
+//					} catch (IOException e) {
+//						e.printStackTrace();
+//					} finally {
+//					}
 					Preview.this.invalidate();
 				}
 			});
