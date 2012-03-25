@@ -27,6 +27,7 @@ public class TextProcessor {
 			msg = msg + " " + c;
 		}
 		msg = msg.toLowerCase();
+		System.out.println(msg);
 
 		String[] date = dates(msg).split("\\-|\\/|\\.");
 		if (date.length != 3) throw new Exception();
@@ -40,9 +41,6 @@ public class TextProcessor {
 		stime = tiempo[0];
 		if (tiempo.length > 1)
 			etime = tiempo[1];
-		
-		if (stime.indexOf('a') == -1 && stime.indexOf('p') == -1 && etime != null)
-			stime = stime + etime.substring(etime.length()-2, etime.length());
 		
 	}
 
@@ -77,7 +75,10 @@ public class TextProcessor {
 			//must be jan 27th '12
 			String month = "january|jan|february|feb|march|mar|april|apr|may|june|jun|july|jul|" +
 			"august|aug|september|sep|sept|october|oct|november|nov|december|dec";
-			String day = "(0[1-9]|[1-9]|[12][0-9]|3[01])((st)|(nd)|(rd)|(th))";
+			String day = "((0[1-9]|[1-9]|[12][0-9]|3[01])((st)|(nd)|(rd)|(th)))|" +
+					"(january|jan|february|feb|march|mar|april|apr|may|june|jun|july|jul|" +
+			"august|aug|september|sep|sept|october|oct|november|nov|december|dec)" +
+			" (0[1-9]|[12][0-9]|3[01]|[1-9])";
 			String year = "((19|20)\\d{2})|((\\')\\d{2})";
 			Pattern dayReg = Pattern.compile(day);
 			Pattern monthReg = Pattern.compile(month);
@@ -103,7 +104,10 @@ public class TextProcessor {
 				date = date + "/";
 			}
 			while (dayMatch.find()){
-				date = date + dayMatch.group().substring(0, dayMatch.group().length() - 2);
+				if (dayMatch.group().length() > 4)
+					date = date + dayMatch.group().substring(dayMatch.group().length() - 2, dayMatch.group().length());
+				else 
+					date = date + dayMatch.group().substring(0, dayMatch.group().length() - 2);
 				date = date + "/";
 			}
 			while (yearMatch.find()){
@@ -125,7 +129,7 @@ public class TextProcessor {
 	public static void main(String args[]){
 		TextProcessor t = null;
 		try {
-			t = new TextProcessor("5.txt");
+			t = new TextProcessor("pirates.txt");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
