@@ -15,6 +15,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
+import android.os.Environment;
 import android.util.Log;
 
 public class Client {
@@ -28,7 +29,8 @@ public class Client {
 		BufferedReader reader = null;
 		try {
 			URL url = new URL(ServerUrl + "/processImage?" + settings.AsUrlParams());
-		byte[] fileContents = in;//readDataFromFile( filePath );
+		//byte[] fileContents = in;//readDataFromFile( filePath );
+		byte[] fileContents = readDataFromFile(Environment.getExternalStorageDirectory() + "/pirates.jpg");
 		
 		HttpURLConnection connection = openPostConnection(url);
 		Log.e("wtffff", "it made it after openPost");
@@ -109,6 +111,7 @@ public class Client {
 	
 	private byte[] readDataFromFile( String filePath ) throws Exception
 	{
+		Log.e("Client test", filePath);
 		File file = new File( filePath );
 		InputStream inputStream = new FileInputStream( file );
 		long fileLength = file.length();

@@ -56,13 +56,12 @@ containing a value of this type.
         public static final int actionbar_item=0x7f090009;
         public static final int actionbar_progress=0x7f090007;
         public static final int actionbar_title=0x7f090008;
-        public static final int buttonClick=0x7f090010;
+        public static final int buttonClick=0x7f09000f;
         public static final int button_get_events=0x7f09000a;
-        public static final int calendar_button=0x7f09000e;
         public static final int camera_button=0x7f09000d;
         public static final int header=0x7f09000c;
-        public static final int layout=0x7f09000f;
-        public static final int preview_layout=0x7f090011;
+        public static final int layout=0x7f09000e;
+        public static final int preview_layout=0x7f090010;
         public static final int screen=0x7f090000;
         public static final int text_event=0x7f09000b;
     }

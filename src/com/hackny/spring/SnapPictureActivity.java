@@ -4,9 +4,10 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
@@ -29,7 +30,6 @@ import com.hackny.spring.helpers.Preview;
 import com.hackny.spring.helpers.TextProcessor;
 
 public class SnapPictureActivity extends Activity {
-    private static final String TAG = "SnapPictureActivity";
 	Camera camera;
     Preview preview;
     Button photoButton;
@@ -37,8 +37,10 @@ public class SnapPictureActivity extends Activity {
     PictureCallback rawCallback;
     PictureCallback jpegCallback;
     FrameLayout layout;
-    TextView tv;
     byte[] imageBytes;
+    ProgressDialog loadingDialog;
+    final Activity mActivity = this;
+    TextView tv;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,30 +76,6 @@ public class SnapPictureActivity extends Activity {
         jpegCallback = new PictureCallback() {
     		public void onPictureTaken(byte[] data, Camera camera) {
     			imageBytes = data;
-    			
-    			
-//				Log.e("SnapPictureActivity BEFORE", imageBytes.toString());
-//				
-//    			//code to set taken picture to be Bitmap
-//    			ByteArrayInputStream bytes = new ByteArrayInputStream(data);
-//    			BitmapDrawable bmd = new BitmapDrawable(bytes);
-//    			Bitmap bm = bmd.getBitmap();
-//
-//    			String fileName = "00000001.jpg";
-//    			FileOutputStream out = null;
-//    			try {
-//    				out = new FileOutputStream(Environment.getExternalStorageDirectory()+"/"+fileName);
-//    				bm.compress(Bitmap.CompressFormat.JPEG, 20, out);
-//    				out.close();
-//    			} catch (IOException e) {
-//    				Log.e("SNAPs", e.getMessage());
-//    			}
-//    			Log.e("SnapPictureActivity FOS:", Environment.getExternalStorageDirectory().toString());       
- 
-//				Intent intent = new Intent(getApplicationContext(), ImageProcessActivity.class);
-//				startActivity(intent);
-//    			Log.d(TAG, "onPictureTaken - jpeg");
-    			
     			startImageProcessing();
     		}
     	};
@@ -107,8 +85,8 @@ public class SnapPictureActivity extends Activity {
     	tv = new TextView(this);
 		tv.setText("Hello, cloud ocr\n");
 		setContentView(tv);
-
-		new Thread( new Worker() ).start();
+    	loadingDialog = ProgressDialog.show(this, "", "Decoding Image...");
+    	new Thread( new Worker() ).start();
     }
     
     class Worker implements Runnable {
@@ -131,11 +109,11 @@ public class SnapPictureActivity extends Activity {
 				settings.setOutputFormat( ProcessingSettings.OutputFormat.txt );
 				
 				displayMessage( "Uploading.." );
+				//loadingDialog = ProgressDialog.show(mActivity, "", "Uploading Image...");
 				Task task = restClient.ProcessImage(imageBytes, settings);
 				
 				while( task.IsTaskActive() ) {
 					Thread.sleep(2000);
-					
 					displayMessage( "Waiting.." );
 					task = restClient.GetTaskStatus(task.Id);
 				}
@@ -146,51 +124,50 @@ public class SnapPictureActivity extends Activity {
 				} else {
 					displayMessage( "Task failed" );
 				}
-				
+				loadingDialog.dismiss();
 				displayMessage( "Ready" );
 
 				TextProcessor tp = new TextProcessor(outputFile);
 				
-				//Log.e("TEXTING BRO:", tp.title + "!!!!! " + tp.stime + " - " + tp.etime + " on " + tp.month + "/" + tp.day + "/" + tp.year);
-				
-				/*StringBuffer contents = new StringBuffer(); 
-				BufferedReader reader = new BufferedReader(new FileReader(outputFile)); 
-				String text = null; 
-				while ((text = reader.readLine()) != null) { 
-					Log.e("READER", "i read? " + text);
-					contents.append(text) ;
-				}*/
-				
-				//String result = 
-					//new GoogleSuggest(contents.toString()).fuqs();
-				//Log.e("FUQS results", result);
 				String result = "Event Title: " + tp.title + ", time:" + tp.stime + " - " + tp.etime + 
 					", Date: " + tp.month + "/" + tp.day + "/" + tp.year;
 				
-				Calendar cal = Calendar.getInstance();
-				Intent calIntent = new Intent(Intent.ACTION_INSERT);
-				calIntent.setType("vnd.android.cursor.item/event");
-				calIntent.putExtra("title", "My House Party");
-				calIntent.putExtra("location", "My Beach House");
-				calIntent.putExtra("description", "A Pig Roast on the Beach");
-				startActivity(calIntent);
-				
-				
 				displayMessage( result.toString() );
+				boolean allDay = false;
+				
+				GregorianCalendar gc = new GregorianCalendar(2000+Integer.parseInt(tp.year), Integer.parseInt(tp.month)-1, Integer.parseInt(tp.day));
+				
+				if (tp.stime == null && tp.etime == null)
+					allDay = true;
+				
+				Intent calIntent = new Intent(Intent.ACTION_EDIT);
+				calIntent.setType("vnd.android.cursor.item/event");
+				calIntent.putExtra("title", tp.title);
+				calIntent.putExtra("beginTime", gc.getTime().getTime());
+				if (allDay) {
+					calIntent.putExtra("allDay", true);
+				   
+				}
+				else {
+					calIntent.putExtra("allDay", false);
+					calIntent.putExtra("beginTime", tp.stime);
+					calIntent.putExtra("endTime", tp.etime);
+				}
+				startActivity(calIntent);
 				
 			} catch ( Exception e ) {
 				final Writer result = new StringWriter();
 		        final PrintWriter printWriter = new PrintWriter(result);
 		        e.printStackTrace(printWriter);
 				Log.e("MOTHER FUCKER", result.toString());
-				displayMessage( "Error: " + e.getClass() + ", " + e.getStackTrace().toString() + ", " + e.getMessage() );
+				//displayMessage( "Error: " + e.getClass() + ", " + e.getStackTrace().toString() + ", " + e.getMessage() );
 			}
 		}
 
-		private void displayMessage( String text )
-		{
+		private void displayMessage( String text ) {
+			//Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
 			tv.post( new MessagePoster( text ) );
-		}
+		}     
 
 		class MessagePoster implements Runnable {
 			public MessagePoster( String message )
