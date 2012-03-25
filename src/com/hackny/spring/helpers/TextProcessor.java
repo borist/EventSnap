@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 
 public class TextProcessor {
 
-	public String stime, etime, day, month, year, title;
+	public String stime, etime, day, month, year, title, description;
 	public String msg;
 
 
@@ -175,14 +175,14 @@ public class TextProcessor {
 
 
 
-	public static void main(String args[]){
-		TextProcessor t = null;
-		try {
-			t = new TextProcessor("pirates.txt");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+//	public static void main(String args[]){
+//		TextProcessor t = null;
+//		try {
+//			t = new TextProcessor("pirates.txt");
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 
 }

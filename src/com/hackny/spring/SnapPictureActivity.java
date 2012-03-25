@@ -144,13 +144,14 @@ public class SnapPictureActivity extends Activity {
 				calIntent.setType("vnd.android.cursor.item/event");
 				calIntent.putExtra("title", tp.title);
 				calIntent.putExtra("beginTime", gc.getTime().getTime());
-				if (allDay) {
+				calIntent.putExtra("description", "visit www.talklikeapirate.com for details. Yarr.");
+				if (allDay) {  
 					calIntent.putExtra("allDay", true);
 				   
 				}
 				else {
 					calIntent.putExtra("allDay", false);
-					calIntent.putExtra("beginTime", tp.stime);
+	     				calIntent.putExtra("beginTime", tp.stime);
 					calIntent.putExtra("endTime", tp.etime);
 				}
 				startActivity(calIntent);

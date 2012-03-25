@@ -4,7 +4,7 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
-	android:background="#cdcdcd"
+	android:background="@drawable/background"
 >
 	<TextView 
 		android:id="@+id/header"
@@ -28,5 +28,30 @@
 		android:background="@drawable/camera"
 		android:onClick="onClick"
 		/>
+		
+	<TextView 
+		android:id="@+id/top_text"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_centerHorizontal="true"
+		android:layout_above="@id/camera_button"
+		android:textStyle="bold"
+		android:textColor="#FFFFFF"
+		android:layout_marginBottom="30sp"
+		android:textSize="28sp"
+		android:text="Click here to"/>
+		
+	<TextView 
+		android:id="@+id/bottom_text"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_centerHorizontal="true"
+		android:layout_below="@id/camera_button"
+		android:layout_marginTop="30sp"
+		android:textStyle="bold"
+		android:textColor="#FFFFFF"
+		android:textSize="28sp"
+		android:gravity="center"
+		android:text="capture an\nevent!"/>
 	
 </RelativeLayout>
