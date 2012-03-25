@@ -24,7 +24,7 @@ public class Preview extends SurfaceView implements SurfaceHolder.Callback {
 	public Preview(Context context) {
 		super(context);
 		mHolder = getHolder();
-		mHolder.addCallback(this);
+		mHolder.addCallback(this); 
 		mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 	}
 

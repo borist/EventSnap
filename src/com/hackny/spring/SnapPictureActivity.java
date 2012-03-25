@@ -1,14 +1,14 @@
 package com.hackny.spring;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
-import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.Writer;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.hardware.Camera;
 import android.hardware.Camera.PictureCallback;
 import android.hardware.Camera.ShutterCallback;
@@ -126,14 +126,19 @@ public class SnapPictureActivity extends Activity {
 				for (String str : Environment.getExternalStorageDirectory().list())
 					Log.e("FUCK", str.toString());
 				
-				String filePath = Environment.getExternalStorageDirectory() + "/1332630890250.jpg";
-				String outputFile = "/sdcard/result.txt";
+				//String filePath = Environment.getExternalStorageDirectory() + "/1332630890250.jpg";
+				
+				File file = new File (Environment.getExternalStorageDirectory(), "result.txt");
+				
+				//FileOutputStream fos = new FileOutputStream(file);
+				//fos
+				String outputFile = Environment.getExternalStorageDirectory() + "/result.txt";
 				
 				ProcessingSettings settings = new ProcessingSettings();
 				settings.setOutputFormat( ProcessingSettings.OutputFormat.txt );
 				
 				displayMessage( "Uploading.." );
-				Task task = restClient.ProcessImage(filePath, settings);
+				Task task = restClient.ProcessImage(imageBytes, settings);
 				
 				while( task.IsTaskActive() ) {
 					Thread.sleep(2000);
@@ -164,7 +169,11 @@ public class SnapPictureActivity extends Activity {
 				displayMessage( contents.toString() );
 				
 			} catch ( Exception e ) {
-				displayMessage( "Error: " + e.getMessage() );
+				final Writer result = new StringWriter();
+		        final PrintWriter printWriter = new PrintWriter(result);
+		        e.printStackTrace(printWriter);
+				Log.e("MOTHER FUCKER", result.toString());
+				displayMessage( "Error: " + e.getClass() + ", " + e.getStackTrace().toString() + ", " + e.getMessage() );
 			}
 		}
 
