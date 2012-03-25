@@ -57,7 +57,6 @@ public class SnapPictureActivity extends Activity {
         photoButton.setAnimation(rotanim);
         photoButton.setOnClickListener(new OnClickListener() {
 			
-			@Override
 			public void onClick(View v) {
 				preview.camera.takePicture(shutterCallback, rawCallback, jpegCallback);
 			}
