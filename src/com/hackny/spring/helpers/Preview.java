@@ -47,8 +47,7 @@ public class Preview extends SurfaceView implements SurfaceHolder.Callback {
 								"/sdcard/%d.jpg", System.currentTimeMillis()));
 						outStream.write(data);
 						outStream.close();
-						Log.d(TAG, "onPreviewFrame - wrote bytes: "
-								+ data.length);
+						Log.d(TAG, "onPreviewFrame - wrote bytes: " + data.length);
 					} catch (FileNotFoundException e) {
 						e.printStackTrace();
 					} catch (IOException e) {
@@ -71,14 +70,29 @@ public class Preview extends SurfaceView implements SurfaceHolder.Callback {
 		camera = null;
 	}
 
-	public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
+	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
 	    Camera.Parameters parameters = camera.getParameters();
 	    List<Camera.Size> previewSizes = parameters.getSupportedPreviewSizes();
+	    Camera.Size result = previewSizes.get(0);
+	    
+	    for (Camera.Size size : parameters.getSupportedPreviewSizes()) {
+	    if (size.width <= width && size.height <= height) {
+	        if (result == null) {
+	          result=size;
+	        }
+	        else {
+	          int resultArea=result.width * result.height;
+	          int newArea=size.width * size.height;
 
-	    Camera.Size previewSize = previewSizes.get(0);
+	          if (newArea > resultArea) {
+	            result=size;
+	          }
+	        }
+	      }
+	    }
 	    //parameters.set("portrait", "orientation");
 	    
-	    parameters.setPreviewSize(previewSize.width, previewSize.height);
+	    parameters.setPreviewSize(result.width, result.height);
 	    camera.setParameters(parameters);
 	    camera.startPreview();
 	}
