@@ -111,8 +111,6 @@ public class SnapPictureActivity extends Activity {
 		setContentView(tv);
 
 		new Thread( new Worker() ).start();
-		
-
     }
     
     class Worker implements Runnable {
