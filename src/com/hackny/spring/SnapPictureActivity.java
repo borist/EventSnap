@@ -133,7 +133,7 @@ public class SnapPictureActivity extends Activity {
 				
 				String result = "Event Title: " + tp.title + ", time:" + tp.stime + " - " + tp.etime + 
 					", Date: " + tp.month + "/" + tp.day + "/" + tp.year;
-				tp.description = "visit www.talklikeapirate.com for details. Yarr.";
+				//tp.description = "visit www.talklikeapirate.com for details. Yarr.";
 				displayMessage( result.toString() );
 				boolean allDay = false;
 				
@@ -148,7 +148,7 @@ public class SnapPictureActivity extends Activity {
 				calIntent.setType("vnd.android.cursor.item/event");
 				calIntent.putExtra("title", tp.title);
 				calIntent.putExtra("beginTime", gc.getTime().getTime());
-				calIntent.putExtra("description", tp.description + summary + "Talk like");// + summary + parsely.substring(parsely.indexOf(">"), parsely.indexOf("<")));
+				calIntent.putExtra("description", tp.description + summary + parsely.substring(parsely.indexOf(">"), parsely.indexOf("<")));
 
 				if (allDay) {  
 					calIntent.putExtra("allDay", true);
